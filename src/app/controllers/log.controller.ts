@@ -68,6 +68,11 @@ export class LogController {
     const selection = editor.selection;
     const fileName = document.fileName;
     const lineNumber = selection.end.line;
+    const cursorPosition = selection.active;
+    const rangeUnderCursor = document.getWordRangeAtPosition(cursorPosition);
+    const wordUnderCursor = rangeUnderCursor
+      ? document.getText(rangeUnderCursor)
+      : null;
     const indent = ' '.repeat(
       document.lineAt(lineNumber).firstNonWhitespaceCharacterIndex,
     );
@@ -76,7 +81,8 @@ export class LogController {
       document,
       selection.start,
     );
-    const variableName = document.getText(selection).trim() || 'variable';
+    const variableName =
+      document.getText(selection).trim() || wordUnderCursor || 'variable';
 
     const { languageId } = editor.document;
 
